@@ -29,4 +29,4 @@ def get_unsplash(key, name="image.jpg"):
 
     print("Downloading that nice picture to your disk ...")
     urllib.request.urlretrieve(img_url, name)
-    print("Yes, the picture is there! Called" + name)
+    print("Yes, the picture is there! Called " + name)
