@@ -23,6 +23,3 @@ def fix_image(image="image.jpg"):
     output.convert('P', palette=Image.ADAPTIVE)
     output.save("image_cropped.jpg", transparency=0)
     print("Image cropped at " + str(width) + " x " + str(height) + " pixels and stored as image_cropped.jpg")
-
-
-fix_image()
