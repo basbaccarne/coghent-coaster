@@ -5,3 +5,6 @@ A self-updating coffee coaster that shows random museum collection items when yo
 
 ## Status
 * Prototyping subchallenges
+
+## Components
+* fetch_unsplash downloads a random Unsplash image
