@@ -9,8 +9,6 @@
 import urllib.request
 import json
 
-my_key = "###"
-
 
 def get_unsplash(key, name="image.jpg"):
     # Part 1: construct URL (feed your key)
@@ -32,6 +30,3 @@ def get_unsplash(key, name="image.jpg"):
     print("Downloading that nice picture to your disk ...")
     urllib.request.urlretrieve(img_url, name)
     print("Yes, the picture is there! Called" + name)
-
-
-get_unsplash(my_key)
