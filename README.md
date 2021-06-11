@@ -7,6 +7,7 @@ A self-updating coffee coaster that shows random museum collection items when yo
 * Prototyping subchallenges
 
 ## Components
+* "hardware.md" describes hardware components, mounting & configuration
 * "fetch_unsplash.py" downloads a random Unsplash image
 * "crop_image.py" takes an image from the program dir and crops & rescales it with a circular mask
 * "coaster_withbutton.py" is the main script. When the coffee mug is lifted, a new image is shown
