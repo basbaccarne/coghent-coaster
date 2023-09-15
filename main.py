@@ -4,15 +4,16 @@ It uses python's multiprocessing to manage the difference components of the appl
 - fetch gets new data from the server
 - interface shows and interacts with the user
 """
-
 import multiprocessing
-import keyboard
+
 
 def get_new_images():
     import src.fetcher
 
+
 def launch_interface():
     import src.interface
+
 
 if __name__ == "__main__":
     process1 = multiprocessing.Process(target=get_new_images)
