@@ -10,7 +10,7 @@ pygame.display.set_caption("CoGhent Coaster")   # define the caption of the wind
 FPS = 60  # set frames per second
 
 # load initial assets
-main_image = pygame.image.load('../data/init.jpg')
+main_image = pygame.image.load('data/init.jpg')
 
 
 # function to handle the actual drawing (define manipulations)

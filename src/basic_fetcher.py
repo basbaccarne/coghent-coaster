@@ -31,8 +31,6 @@ import requests
 # To work with IIIF images we need the Pillow package and the io package
 from PIL import Image
 from io import BytesIO
-import json
-import keyboard
 
 #############
 #  SETTINGS #
@@ -143,68 +141,9 @@ def img_fetcher(my_object, counter, action='show'):
             image.show()
 
         if action == 'download':
-            filename = f"data/image{counter}.jpg"
+            filename = f"../data/image{counter}.jpg"
             with open(filename, "wb") as file:
                 file.write(img_response.content)
                 print("----->  Image downloaded successfully.")
     else:
         print(f"----->  Request failed with status code: {img_response.status_code}")
-
-###################################################################
-#  FUNCTION THAT GETS TRIGGERED WHEN NEW IMAGES HAVE TO BE LOADED #
-###################################################################
-
-
-def load_new_imgs(start_index):
-    # define array to loop through and an index to start from
-    img_array = [1, 2, 3]
-    my_index = start_index
-
-    print(f'Loading 2 images, starting with image {start_index+1}')
-    # get four random images, starting from the start_index
-    for item in range(len(img_array)-1):
-        image_id = img_array[my_index]
-
-        # get the metadata of a random image
-        print(f'Image {image_id}')
-        image = None
-        while image is None:
-            image = data_fetcher()
-
-        # download the image
-        img_fetcher(image, image_id, action='download')
-
-        # store the metadata
-        json_string = json.dumps(image)
-        data_path = f'data/image{image_id}.json'
-        with open(data_path, 'w') as file:
-            file.write(json_string)
-
-        # update the counter
-        my_index = (my_index + 1) % len(img_array)
-    print('Done!')
-
-
-# load images on boot
-starting_index = 0
-load_new_imgs(starting_index)
-
-
-# now wait for the spacebar to do new things
-def spacebar_action():
-    # When the spacebar is pressed, load the next two images
-    print("Spacebar pressed!")
-    global starting_index
-    starting_index = (starting_index + 2) % 3
-    load_new_imgs(starting_index)
-
-
-# Register the spacebar key press event
-keyboard.on_press_key("space", lambda e: spacebar_action())
-print("Press the spacebar to perform an action. Press 'q' to quit.")
-
-# Listen for events until 'q' is pressed
-keyboard.wait("esc")
-
-# Unregister the event handler
-keyboard.unhook_all()
