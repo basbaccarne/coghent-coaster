@@ -1,9 +1,9 @@
 """
 iterative build of the pygame
 """
-import pygame                     # we use pygame to make the GUI
+import pygame  # we use pygame to make the GUI
 
-# screen settings
+# game screen settings
 WIN = pygame.display.set_mode((500, 500))  # a 500 x 500 window
 # WIN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # for a full screen window
 pygame.display.set_caption("CoGhent Coaster")   # define the caption of the window
@@ -14,15 +14,14 @@ main_image = pygame.image.load('data/init.jpg')
 
 
 # function to handle the actual drawing (define manipulations)
-def draw_window(rotation, pulse):
-    WIN.fill((10, 10, 10))    # background color
-    rotated_img = pygame.transform.rotate(main_image, rotation)  # define image
-    WIN.blit(rotated_img, (0, 0))   # draw image
-    pygame.draw.circle(WIN, (184, 85, 153), [250, 250], pulse + 150, pulse)  # draw circle
+def draw_window(border, size, image=main_image):
+    WIN.fill((10, 10, 10))    # set the background color
+    WIN.blit(image, (0, 0))   # draw the image
+    pygame.draw.circle(WIN, (184, 85, 153), [250, 250], size, border)  # draw a circle (animated size & border)
     pygame.display.update()  # update the display
 
 
-# define what happens when the coaster is booting (define manipulations)
+# define what happens when the coaster is booting (define pulse manipulations)
 def boot_function(pulse):
     new_pulse = pulse + 1
     if new_pulse > 250:
@@ -30,31 +29,34 @@ def boot_function(pulse):
     return new_pulse
 
 
+# define starting index for the images
+show_index = 0
+
+
 # define what happens when spacebar is pressed (define manipulations)
-def update_content(rotation, booting, loading):
-    if booting:
-        return rotation + 90
-    elif loading:
-        return rotation + 120
-    else:
-        return rotation + 180
+def update_content():
+    global show_index
+    show_index = (show_index + 1) % 3   # increase the show index
+    return pygame.image.load(f'data/image{show_index+1}.jpg') # give back the path of the image
 
 
 # main game loop (define interactions)
-def main():
+def main(image):
     clock = pygame.time.Clock()     # clock to maintain the FPS
     run = True
 
     # other settings
-    rotation = 0
-    pulse = 1
+    border = 1
     booting = True
-    loading = False
 
     while run:
         clock.tick(FPS)
+
+        # animation while booting
         if booting:
-            pulse = boot_function(pulse)
+            border = boot_function(border)
+            size = border+150
+
         # get a list of al the incoming events
         for event in pygame.event.get():
             # escape the loop and quit the game when window x is pressed
@@ -67,15 +69,16 @@ def main():
                     run = False
                 elif event.key == pygame.K_SPACE:
                     booting = False
-                    pulse = 1
-                    rotation = update_content(rotation, booting, loading)
+                    border = 0
+                    size = 0
+                    image = update_content()
 
         # draw new graphics
-        draw_window(rotation, pulse)
+        draw_window(border, size, image)
 
     # close when the while loop is escaped
     pygame.quit()
 
 
 # run the game
-main()
+main(main_image)
