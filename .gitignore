@@ -4,3 +4,4 @@
 .idea/misc.xml
 .idea/modules.xml
 src/__pycache__/fetcher.cpython-38.pyc
+.idea/vcs.xml
