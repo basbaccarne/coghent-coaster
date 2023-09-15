@@ -15,7 +15,7 @@ FPS = 60  # set frames per second
 main_image = pygame.image.load('../data/init.jpg')
 
 
-# function to handle the actual drawing
+# function to handle the actual drawing (define manipulations)
 def draw_window(rotation, pulse):
     WIN.fill((10, 10, 10))    # background color
     rotated_img = pygame.transform.rotate(main_image, rotation)  # define image
@@ -24,7 +24,7 @@ def draw_window(rotation, pulse):
     pygame.display.update()  # update the display
 
 
-# define what happens when the coaster is booting
+# define what happens when the coaster is booting (define manipulations)
 def boot_function(pulse):
     new_pulse = pulse + 1
     if new_pulse > 250:
@@ -32,7 +32,7 @@ def boot_function(pulse):
     return new_pulse
 
 
-# define what happens when spacebar is pressed
+# define what happens when spacebar is pressed (define manipulations)
 def update_content(rotation, booting, loading):
     if booting:
         return rotation + 90
@@ -42,7 +42,7 @@ def update_content(rotation, booting, loading):
         return rotation + 180
 
 
-# main game loop
+# main game loop (define interactions)
 def main():
     clock = pygame.time.Clock()     # clock to maintain the FPS
     run = True
