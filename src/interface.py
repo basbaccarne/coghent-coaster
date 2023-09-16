@@ -3,6 +3,7 @@ iterative build of the pygame
 """
 import pygame  # we use pygame to make the GUI
 import json    # to read the metadata
+import os      # to check for status
 
 pygame.init()
 # game screen settings
@@ -59,7 +60,7 @@ show_index = 0
 def update_content():
     # increase the show index
     global show_index
-    show_index = (show_index + 1) % 3
+    show_index = (show_index + 1) % 5
 
     # get the metadata
     with open(f'data/image{show_index+1}.json', 'r') as json_file:
@@ -107,13 +108,12 @@ def main(image):
                 if event.key == pygame.K_ESCAPE:
                     run = False
                 elif event.key == pygame.K_SPACE:
-                    booting = False
-                    border = 0
-                    size = 0
-                    update = update_content()
-                    image = update['img']
-                    text = f"{update['name']} ({update['source']})"
-
+                        booting = False
+                        border = 0
+                        size = 0
+                        update = update_content()
+                        image = update['img']
+                        text = f"{update['name']} ({update['source']})"
         # draw new graphics
         draw_window(border, size, desc_rect, image, text)
 
