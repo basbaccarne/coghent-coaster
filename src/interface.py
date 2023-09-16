@@ -3,7 +3,6 @@ iterative build of the pygame
 """
 import pygame  # we use pygame to make the GUI
 import json    # to read the metadata
-import os      # to check for status
 
 pygame.init()
 # game screen settings
@@ -12,8 +11,8 @@ WIN = pygame.display.set_mode((500, 500))  # a 500 x 500 window
 screen_rect = WIN.get_rect()
 pygame.display.set_caption("CoGhent Coaster")   # define the caption of the window
 
-FPS = 30  # set frames per second
-font = pygame.font.Font('src/DejaVuMathTeXGyre.ttf', 15)
+FPS = 60  # set frames per second
+font = pygame.font.Font('src/basetica-medium.otf', 20)
 
 # load initial img assets
 main_image = 'data/init.jpg'
@@ -34,8 +33,12 @@ def draw_window(border, size, desc_rect, image=main_image, text='', ):
     WIN.blit(new_image, (0, 0))
 
     # update the text
+    if(text != ''):
+        pygame.draw.rect(WIN, (220,220,220), pygame.Rect(0, 6, 500, 49))
+        pygame.draw.rect(WIN, (192,192,192), pygame.Rect(0, 6, 500, 46))
+        pygame.draw.rect(WIN, (169,169,169), pygame.Rect(0, 6, 500, 43))
+        pygame.draw.rect(WIN, (253,194,11), pygame.Rect(0, 6, 500, 40))
     text = font.render(text, True, (0,0,0))
-    textRect = text.get_rect(left=screen_rect.right, top=20)
     WIN.blit(text, desc_rect)
 
     # loading animation for the booting process
@@ -93,7 +96,8 @@ def main(image):
             size = border+150
 
         # vertical text scrolling
-        desc_rect.x -= 2
+        desc_rect.y = 16
+        desc_rect.x -= 1
         if desc_rect.right <= 0-500:  # if leave on left side
             desc_rect.x = screen_rect.right  # then move to right side
 
@@ -114,6 +118,7 @@ def main(image):
                         update = update_content()
                         image = update['img']
                         text = f"{update['name']} ({update['source']})"
+                        desc_rect.x = screen_rect.right
         # draw new graphics
         draw_window(border, size, desc_rect, image, text)
 
