@@ -33,6 +33,7 @@ from PIL import Image
 from io import BytesIO
 import json
 import keyboard
+import os
 
 #############
 #  SETTINGS #
@@ -156,6 +157,13 @@ def img_fetcher(my_object, counter, action='show'):
 
 
 def load_new_imgs(start_index):
+
+    # status management: delete finished.txt on update start
+    status_path = 'data/finished.txt'
+    if os.path.exists(status_path):
+        print('resetting status ...')
+        os.remove(status_path)
+
     # define array to loop through and an index to start from
     img_array = [1, 2, 3]
     my_index = start_index
@@ -182,6 +190,11 @@ def load_new_imgs(start_index):
 
         # update the counter
         my_index = (my_index + 1) % len(img_array)
+
+    # status management: create finished.txt when done
+    with open(status_path, 'w') as file:
+        file.write("Download complete\n")
+
     print('Done!')
 
 

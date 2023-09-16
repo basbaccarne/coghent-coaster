@@ -9,3 +9,4 @@ tests/__pycache__/pygame.cpython-38.pyc
 tests/multiprocessing/__pycache__/empty_timer.cpython-38.pyc
 tests/multiprocessing/__pycache__/printer.cpython-38.pyc
 src/__pycache__/interface.cpython-38.pyc
+data/finished.txt
