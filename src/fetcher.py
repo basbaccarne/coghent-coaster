@@ -33,13 +33,10 @@ from PIL import Image
 from io import BytesIO
 import json
 import keyboard
-import ssl
 
 #############
 #  SETTINGS #
 #############
-ssl._create_default_https_context = ssl._create_unverified_context
-
 # SPARQL datasource url
 sparql = SPARQLWrapper("https://stad.gent/sparql")
 
@@ -53,6 +50,9 @@ sparql.setQuery("""
     } ORDER BY ?random
     LIMIT 1
 """)
+
+session = requests.Session()
+headers = {'User-Agent': 'CoGhent Coaster App/1.0', 'Accept-Encoding': 'gzip, deflate'}
 
 ###########################
 # DEFINE THE DATA FETCHER #
@@ -86,32 +86,35 @@ def data_fetcher():
     # print(f"--> Fetching data from the manifest ....")
 
     # Fetch the data
-    uri_response = requests.get(uri)
+    try:
+        uri_response = session.get(uri, headers=headers, timeout=(1, 2))
+        # Process the incoming signal
+        data = None
+        if uri_response.status_code == 200:
+            data = uri_response.json()
+        else:
+            # print(f"--> Failed to fetch data. Status code: {uri_response.status_code}")
+            my_object = None
+        if uri_response.status_code == 403:
+            # print(f"--> We ran into auth issues")
+            my_object = None
 
-    # Process the incoming signal
-    data = None
-    if uri_response.status_code == 200:
-        data = uri_response.json()
-    else:
-        # print(f"--> Failed to fetch data. Status code: {uri_response.status_code}")
+        # If there is data, get the values from the jason data
+        if uri_response.status_code == 200:
+            name = data['label']['@value']
+            # print(f"-----> the name of the object is: {name}")
+
+            attribution = data['sequences'][0]['canvases'][0]['images'][0]['attribution']
+            # print(f"-----> the attribution is: {attribution}")
+
+            img_url = data['sequences'][0]['canvases'][0]['images'][0]['resource']['@id']
+            # print(f"-----> the image url is is: {img_url}")
+
+            # store the result in a dictionary
+            my_object = {'name': name, 'attribution': attribution, 'img_url': img_url}
+
+    except requests.exceptions.Timeout:
         my_object = None
-    if uri_response.status_code == 403:
-        # print(f"--> We ran into auth issues")
-        my_object = None
-
-    # If there is data, get the values from the jason data
-    if uri_response.status_code == 200:
-        name = data['label']['@value']
-        # print(f"-----> the name of the object is: {name}")
-
-        attribution = data['sequences'][0]['canvases'][0]['images'][0]['attribution']
-        # print(f"-----> the attribution is: {attribution}")
-
-        img_url = data['sequences'][0]['canvases'][0]['images'][0]['resource']['@id']
-        # print(f"-----> the image url is is: {img_url}")
-
-        # store the result in a dictionary
-        my_object = {'name': name, 'attribution': attribution, 'img_url': img_url}
 
     return my_object
 
@@ -133,28 +136,32 @@ def img_fetcher(my_object, counter, action='show'):
     # print(f"-----> the rescaled url is: {rescaled_url}")
 
     # Send a GET request to the IIIF URL
-    img_response = requests.get(rescaled_url)
+    try:
+        img_response = session.get(rescaled_url, headers=headers, timeout=(1, 2))
 
-    # Check if the request was successful (status code 200)
-    if img_response.status_code == 200:
+        # Check if the request was successful (status code 200)
+        if img_response.status_code == 200:
 
-        if action == 'show':
-            # Open the image from the response content
-            image = Image.open(BytesIO(img_response.content))
-            # Display the image
-            image.show()
+            if action == 'show':
+                # Open the image from the response content
+                image = Image.open(BytesIO(img_response.content))
+                # Display the image
+                image.show()
 
-        if action == 'download':
-            try:
-                filename = f"data/image{counter}.jpg"
-                with open(filename, "wb") as file:
-                    file.write(img_response.content)
-                    # ("----->  Image downloaded successfully.")
-                    pass
-            except PermissionError:
-                print('file is open in viewer')
-    else:
-        print(f"----->  Request failed with status code: {img_response.status_code}")
+            if action == 'download':
+                try:
+                    filename = f"data/image{counter}.jpg"
+                    with open(filename, "wb") as file:
+                        file.write(img_response.content)
+                        # ("----->  Image downloaded successfully.")
+                        pass
+                except PermissionError:
+                    print('file is open in viewer')
+        else:
+            print(f"----->  Request failed with status code: {img_response.status_code}")
+
+    except requests.exceptions.Timeout:
+        print("uh ow, timeout while downloading")
 
 ###################################################################
 #  FUNCTION THAT GETS TRIGGERED WHEN NEW IMAGES HAVE TO BE LOADED #
@@ -176,13 +183,15 @@ def load_new_imgs(start_index):
         image_id = img_array[my_index]
 
         # get the metadata of a random image
-        print(f'Loading image {image_id}')
+        print(f'Loading image {image_id}.', end='')
         image = None
         while image is None:
             image = data_fetcher()
+            print('.', end='')
 
         # download the image
         img_fetcher(image, image_id, action='download')
+        print('.', end='')
 
         # store the metadata
         json_string = json.dumps(image)
@@ -190,30 +199,36 @@ def load_new_imgs(start_index):
         with open(data_path, 'w') as file:
             file.write(json_string)
 
+        print()
 
-
-
-    # print('Done!')
+    print("New load complete!")
 
 
 # load images on boot
 starting_index = 0
-print('Erfgoed bij de koffie, smakelijk!')
+print('Erfgoed bij de koffie, geniet van deze ervaring!')
 load_new_imgs(2)
 
+key_pressed = False
 
 # now wait for the spacebar to do new things
 def spacebar_action():
     # When the spacebar is pressed, load the next images
     # print("Spacebar pressed!")
+    global key_pressed
     global starting_index
-    print(f'Loading two new images. The current index is {starting_index}')
-    starting_index = (starting_index + 1) % 5  # proceed step by step (0 - 1 -2 -3 - 4)
-    load_new_imgs(starting_index + 1)  # load 3 images ahead
+    if not key_pressed:
+        key_pressed = True
+        print(f'Loading two new images. The current index is {starting_index}')
+        starting_index = (starting_index + 1) % 5  # proceed step by step (0 - 1 -2 -3 - 4)
+        load_new_imgs(starting_index + 1)  # load 3 images ahead
+    else:
+        key_pressed = False
+    print("Space bar loads two new images.")
+
 
 # Register the spacebar key press event
 keyboard.on_press_key("space", lambda e: spacebar_action())
-print("All set, space bar loads two new images.")
 
 # Listen for events until 'q' is pressed
 keyboard.wait("esc")
