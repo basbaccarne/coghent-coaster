@@ -87,7 +87,7 @@ def data_fetcher():
 
     # Fetch the data
     try:
-        uri_response = session.get(uri, headers=headers, timeout=(1, 2))
+        uri_response = session.get(uri, headers=headers, timeout=(1, 3))
         # Process the incoming signal
         data = None
         if uri_response.status_code == 200:
@@ -137,7 +137,7 @@ def img_fetcher(my_object, counter, action='show'):
 
     # Send a GET request to the IIIF URL
     try:
-        img_response = session.get(rescaled_url, headers=headers, timeout=(1, 2))
+        img_response = session.get(rescaled_url, headers=headers, timeout=(1, 3))
 
         # Check if the request was successful (status code 200)
         if img_response.status_code == 200:
@@ -211,6 +211,7 @@ load_new_imgs(2)
 
 key_pressed = False
 
+
 # now wait for the spacebar to do new things
 def spacebar_action():
     # When the spacebar is pressed, load the next images
@@ -224,6 +225,7 @@ def spacebar_action():
         load_new_imgs(starting_index + 1)  # load 3 images ahead
     else:
         key_pressed = False
+    key_pressed = False
     print("Space bar loads two new images.")
 
 
