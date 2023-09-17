@@ -207,8 +207,6 @@ def load_new_imgs(start_index):
 # load images on boot
 starting_index = 0
 print('Erfgoed bij de koffie, geniet van deze ervaring!')
-load_new_imgs(2)
-
 key_pressed = False
 
 
