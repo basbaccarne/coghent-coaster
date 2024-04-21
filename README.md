@@ -12,7 +12,7 @@ Features:
 - Microprocessor: [Raspberry Pi Zero W 1.1](https://www.raspberrypi.com/products/raspberry-pi-zero-w/)
 - GPIO Stacking Header
 - USB extender module
-- Heater module
+- [USB Mug Heating Plate – Cup Warmer](https://www.bol.com/be/nl/p/techparadise-verwarmde-onderzetter-tot-85-c-warmhoudplaat-voor-mok-thee-koffie-mug-heating-plate-cup-warmer/9300000169548457/?s2a=&bltgh=lfB-BCTDYy4MYpod0p9Pgg.2_24_25.26.FeatureOption#productTitle) (9 cm diameter, 0,7 cm height)
 - Case
 
 # Installation
