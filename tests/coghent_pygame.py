@@ -66,7 +66,7 @@ def main():
                 # escape the loop and quit the game when it is the escape key
                 if event.key == pygame.K_ESCAPE:
                     run = False
-                elif event.key == pygame.K_SPACE:
+                elif event.key == pygame.K_SPACE or event.key == 330:
                     booting = False
                     pulse = 1
                     rotation = update_content(rotation, booting, loading)
