@@ -2,6 +2,7 @@
 iterative build of the pygame
 """
 import pygame                     # we use pygame to make the GUI
+import evdev
 
 # screen settings
 WIN = pygame.display.set_mode((480, 480))  # a 480 x 480 window
