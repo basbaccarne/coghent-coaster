@@ -4,7 +4,7 @@ iterative build of the pygame
 import pygame                     # we use pygame to make the GUI
 
 # screen settings
-WIN = pygame.display.set_mode((500, 500))  # a 500 x 500 window
+WIN = pygame.display.set_mode((480, 480))  # a 480 x 480 window
 # WIN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # for a full screen window
 pygame.display.set_caption("CoGhent Coaster")   # define the caption of the window
 FPS = 60  # set frames per second
