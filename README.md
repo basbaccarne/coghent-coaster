@@ -25,16 +25,21 @@ Features:
 3. Set-up the Raspberry Pi to work with the display & PyGame ([like this](https://github.com/basbaccarne/HyperPixel2r_tests))
 
 ## Show API image on touch
-- Work in progress
+- **Work in progress**
+- Work with mouse first
 
 ## Show API image on mug lift
-- Work in progress
+- **Work in progress**
+- Which GPIO pin is still free
   
 ## Set-up USB heater module
-- Work in progress
+- **Work in progress**
+- Take power from USB out on Raspi
   
 ## Assembly
-- Work in progress
+- **Work in progress**
+- Also consider credential management
+- Also cosider single python dependency download
 
 ## Old to To Dos
 * increase speeed of the loading script
