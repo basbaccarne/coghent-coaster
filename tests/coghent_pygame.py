@@ -2,7 +2,6 @@
 iterative build of the pygame
 """
 import pygame                     # we use pygame to make the GUI
-import evdev
 
 # screen settings
 WIN = pygame.display.set_mode((480, 480))  # a 480 x 480 window
@@ -66,7 +65,7 @@ def main():
                 # escape the loop and quit the game when it is the escape key
                 if event.key == pygame.K_ESCAPE:
                     run = False
-                elif event.key == pygame.K_SPACE or event.key == 330:
+                elif event.key == pygame.K_SPACE or event.type == MOUSEBUTTONDOWN:
                     booting = False
                     pulse = 1
                     rotation = update_content(rotation, booting, loading)
